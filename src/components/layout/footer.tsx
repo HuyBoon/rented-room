@@ -1,86 +1,87 @@
-'use client';
-
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Building2, Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Building2, Facebook, Instagram, Twitter, Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-  const pathname = usePathname();
-
-  if (pathname.includes('/dashboard')) return null;
-
   return (
-    <footer className="bg-slate-950 text-slate-400 py-12 md:py-16">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-slate-50 border-t border-slate-200">
+      <div className="container mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
           {/* Brand */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="p-2 rounded-xl bg-indigo-600 text-white">
+              <div className="p-2 bg-primary rounded-lg text-white">
                 <Building2 className="h-6 w-6" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Rented<span className="text-indigo-500">Room</span>
+              <span className="text-2xl font-black tracking-tight text-slate-900">
+                Rented<span className="text-primary">Room</span>
               </span>
             </Link>
-            <p className="text-sm leading-relaxed">
-              Giải pháp quản lý và thuê phòng trọ hiện đại, minh bạch và tiện lợi. Mang lại trải nghiệm tốt nhất cho cả chủ trọ và khách thuê.
+            <p className="text-slate-500 font-medium leading-relaxed">
+              Giải pháp quản lý và tìm kiếm phòng trọ hàng đầu Việt Nam. Chúng tôi kết nối niềm tin và sự thuận tiện giữa chủ hộ và khách thuê.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="#" className="hover:text-indigo-500 transition-colors"><Facebook className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-indigo-500 transition-colors"><Instagram className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-indigo-500 transition-colors"><Twitter className="h-5 w-5" /></a>
+              {[Facebook, Instagram, Twitter].map((Icon, i) => (
+                <button key={i} className="p-2 rounded-full border border-slate-200 text-slate-400 hover:text-primary hover:border-primary transition-all">
+                  <Icon className="h-5 w-5" />
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Liên kết nhanh</h3>
+          <div className="space-y-6">
+            <h4 className="text-sm font-black uppercase tracking-widest text-slate-900">Dịch vụ</h4>
             <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-indigo-500 transition-colors">Trang chủ</Link></li>
-              <li><Link href="/view-room" className="hover:text-indigo-500 transition-colors">Xem phòng</Link></li>
-              <li><Link href="/login" className="hover:text-indigo-500 transition-colors">Đăng nhập Quản trị</Link></li>
-              <li><Link href="/tenants/login" className="hover:text-indigo-500 transition-colors">Dành cho Khách thuê</Link></li>
+              {["Tìm kiếm phòng", "Dành cho chủ trọ", "Bảng giá dịch vụ", "Hợp đồng mẫu"].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-slate-500 font-medium hover:text-primary transition-colors">{item}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Dịch vụ</h3>
+          {/* Company */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-black uppercase tracking-widest text-slate-900">Công ty</h4>
             <ul className="space-y-4">
-              <li><span className="cursor-default hover:text-indigo-500 transition-colors">Thuê phòng trọ</span></li>
-              <li><span className="cursor-default hover:text-indigo-500 transition-colors">Quản lý tòa nhà</span></li>
-              <li><span className="cursor-default hover:text-indigo-500 transition-colors">Thanh toán hóa đơn</span></li>
-              <li><span className="cursor-default hover:text-indigo-500 transition-colors">Hỗ trợ kỹ thuật</span></li>
+              {["Về chúng tôi", "Chính sách bảo mật", "Điều khoản dịch vụ", "Trung tâm trợ giúp"].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-slate-500 font-medium hover:text-primary transition-colors">{item}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Liên hệ</h3>
+          <div className="space-y-6">
+            <h4 className="text-sm font-black uppercase tracking-widest text-slate-900">Liên hệ</h4>
             <ul className="space-y-4">
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-3 text-indigo-500 flex-shrink-0" />
-                <span className="text-sm">123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh</span>
+              <li className="flex items-center space-x-3 text-slate-500 font-medium">
+                <Phone className="h-5 w-5 text-primary" />
+                <span>0901 234 567</span>
               </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-3 text-indigo-500 flex-shrink-0" />
-                <span className="text-sm">0901 234 567</span>
+              <li className="flex items-center space-x-3 text-slate-500 font-medium">
+                <Mail className="h-5 w-5 text-primary" />
+                <span>support@rentedroom.vn</span>
               </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-3 text-indigo-500 flex-shrink-0" />
-                <span className="text-sm">info@rentedroom.vn</span>
+              <li className="flex items-center space-x-3 text-slate-500 font-medium">
+                <MapPin className="h-5 w-5 text-primary" />
+                <span>Quận 1, TP. Hồ Chí Minh</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-xs">
-          <p>© {currentYear} RentedRoom. Tất cả các quyền được bảo lưu.</p>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-white transition-colors">Chính sách bảo mật</a>
-            <a href="#" className="hover:text-white transition-colors">Điều khoản dịch vụ</a>
+        <div className="mt-20 pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-slate-400 text-sm font-medium italic">
+            © 2024 RentedRoom Platform. All rights reserved.
+          </p>
+          <div className="flex items-center space-x-6 text-sm font-bold text-slate-400">
+            <span className="flex items-center gap-2">
+              <Globe className="h-4 w-4" /> Tiếng Việt
+            </span>
+            <Link href="#" className="hover:text-primary transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>

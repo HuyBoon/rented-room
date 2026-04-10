@@ -4,18 +4,13 @@ import * as React from "react"
 import { useSession } from "next-auth/react"
 import {
   Building2,
-  DoorOpen,
-  Users,
-  FileText,
   Receipt,
-  CreditCard,
-  AlertTriangle,
-  Bell,
   Settings,
   Shield,
-  Home,
   Building,
-  Globe,
+  AlertTriangle,
+  Zap,
+  Globe
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -34,95 +29,57 @@ import {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession()
   
-  // Tạo navigation items dựa trên role
   const navMain = React.useMemo(() => {
     const baseItems = [
       {
-        title: "Quản lý cơ bản",
+        title: "Dữ liệu core",
         url: "#",
         icon: Building,
         isActive: true,
         items: [
-          {
-            title: "Tòa nhà",
-            url: "/dashboard/buildings",
-          },
-          {
-            title: "Phòng",
-            url: "/dashboard/rooms",
-          },
-          {
-            title: "Khách thuê",
-            url: "/dashboard/tenants",
-          },
+          { title: "Hệ thống Tòa nhà", url: "/dashboard/buildings" },
+          { title: "Quản lý Phòng", url: "/dashboard/rooms" },
+          { title: "Cơ sở Khách thuê", url: "/dashboard/tenants" },
         ],
       },
       {
-        title: "Tài chính",
+        title: "Tài chính & OPS",
         url: "#",
         icon: Receipt,
         items: [
-          {
-            title: "Hợp đồng",
-            url: "/dashboard/contracts",
-          },
-          {
-            title: "Hóa đơn",
-            url: "/dashboard/invoices",
-          },
-          {
-            title: "Thanh toán",
-            url: "/dashboard/payments",
-          },
+          { title: "Hợp đồng thông minh", url: "/dashboard/contracts" },
+          { title: "Quy trình Hóa đơn", url: "/dashboard/invoices" },
+          { title: "Sổ cái Thanh toán", url: "/dashboard/payments" },
         ],
       },
       {
-        title: "Vận hành",
+        title: "Monitoring",
         url: "#",
         icon: AlertTriangle,
         items: [
-          {
-            title: "Sự cố",
-            url: "/dashboard/incidents",
-          },
-          {
-            title: "Thông báo",
-            url: "/dashboard/notifications",
-          },
-          {
-            title: "Xem Web",
-            url: "/dashboard/xem-web",
-          },
+          { title: "Sự cố kỹ thuật", url: "/dashboard/incidents" },
+          { title: "Hub Thông báo", url: "/dashboard/notifications" },
+          { title: "Live Preview", url: "/dashboard/xem-web" },
         ],
       },
       {
-        title: "Cài đặt",
+        title: "Cấu hình",
         url: "#",
         icon: Settings,
         items: [
-          {
-            title: "Hồ sơ",
-            url: "/dashboard/profile",
-          },
-          {
-            title: "Cài đặt",
-            url: "/dashboard/settings",
-          },
+          { title: "Hồ sơ User", url: "/dashboard/profile" },
+          { title: "Hệ thống Setup", url: "/dashboard/settings" },
         ],
       },
     ]
 
-    // Thêm mục quản lý admin nếu là admin
     if (session?.user?.role === 'admin') {
       baseItems.splice(3, 0, {
-        title: "Quản trị",
+        title: "Administrators",
         url: "#",
         icon: Shield,
         items: [
-          {
-            title: "Quản lý tài khoản",
-            url: "/dashboard/users",
-          },
+          { title: "Phân quyền User", url: "/dashboard/users" },
         ],
       })
     }
@@ -131,34 +88,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [session?.user?.role])
 
   const userData = React.useMemo(() => ({
-    name: session?.user?.name || "User",
-    email: session?.user?.email || "user@example.com",
+    name: session?.user?.name || "Admin User",
+    email: session?.user?.email || "admin@rented.tech",
     avatar: session?.user?.avatar || "/avatars/default.jpg",
   }), [session])
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="icon" className="border-r border-white/5" {...props}>
+      <SidebarHeader className="p-6">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton size="lg" asChild className="hover:bg-primary/10 transition-all group">
               <a href="/dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Building2 className="size-4" />
+                <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-primary text-black shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform">
+                  <Building2 className="size-5" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Phòng trọ</span>
-                  <span className="truncate text-xs">Quản lý</span>
+                <div className="grid flex-1 text-left text-sm leading-tight ml-2">
+                  <span className="truncate font-black uppercase tracking-tighter text-white italic">Rented<span className="text-primary italic">Room</span></span>
+                  <span className="truncate text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Terminal v2.0</span>
                 </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="px-4">
         <NavMain items={navMain} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="p-4">
         <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
