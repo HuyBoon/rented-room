@@ -137,24 +137,28 @@ export class TenantController {
 
   static async login(request: NextRequest) {
     const body = await request.json();
-    const formattedBody = {
-      phoneNumber: body.phoneNumber || body.soDienThoai,
-      password: body.password || body.matKhau,
-    };
+    const loginIdentifier = body.email || body.phoneNumber || body.soDienThoai;
+    const passwordField = body.password || body.matKhau;
 
-    if (!formattedBody.phoneNumber || !formattedBody.password) {
-      return NextResponse.json({ message: 'Phone number and password are required' }, { status: 400 });
+    if (!loginIdentifier || !passwordField) {
+      return NextResponse.json({ message: 'Email/Số điện thoại và mật khẩu là bắt buộc' }, { status: 400 });
     }
 
-    const tenant = await Tenant.findOne({ phoneNumber: formattedBody.phoneNumber }).select('+password');
-    if (!tenant) return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+    const tenant = await Tenant.findOne({
+      $or: [
+        { email: loginIdentifier.toLowerCase() },
+        { phoneNumber: loginIdentifier }
+      ]
+    }).select('+password');
+
+    if (!tenant) return NextResponse.json({ message: 'Thông tin đăng nhập không chính xác' }, { status: 401 });
 
     if (!tenant.password) {
-      return NextResponse.json({ message: 'Account not activated. Please contact management.' }, { status: 401 });
+      return NextResponse.json({ message: 'Tài khoản chưa kích hoạt. Vui lòng liên hệ quản lý.' }, { status: 401 });
     }
 
-    const isValid = await tenant.comparePassword(formattedBody.password);
-    if (!isValid) return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+    const isValid = await tenant.comparePassword(passwordField);
+    if (!isValid) return NextResponse.json({ message: 'Thông tin đăng nhập không chính xác' }, { status: 401 });
 
     const jwt = await import('jsonwebtoken');
     const token = jwt.default.sign(
@@ -165,18 +169,16 @@ export class TenantController {
 
     return NextResponse.json({
       success: true,
-      message: 'Login successful',
-      data: {
-        tenant: {
-          id: tenant._id,
-          fullName: tenant.fullName,
-          phoneNumber: tenant.phoneNumber,
-          email: tenant.email,
-          idCardNumber: tenant.idCardNumber,
-          status: tenant.status
-        },
-        token
-      }
+      message: 'Đăng nhập thành công',
+      khachThue: {
+        id: tenant._id,
+        fullName: tenant.fullName,
+        phoneNumber: tenant.phoneNumber,
+        email: tenant.email,
+        idCardNumber: tenant.idCardNumber,
+        status: tenant.status
+      },
+      token
     });
   }
 

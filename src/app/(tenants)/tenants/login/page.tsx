@@ -34,10 +34,10 @@ export default function TenantLoginPage() {
 
       const data = await result.json();
 
-      if (data.success) {
+      if (data.success && data.khachThue) {
         localStorage.setItem('khachThueToken', data.token);
         localStorage.setItem('khachThueData', JSON.stringify(data.khachThue));
-        toast.success(`Chào mừng trở lại, ${data.khachThue.fullName || data.khachThue.hoTen}`);
+        toast.success(`Chào mừng trở lại, ${data.khachThue.fullName}`);
         router.push('/tenants/dashboard');
       } else {
         toast.error(data.message || 'Thông tin đăng nhập không hợp lệ');

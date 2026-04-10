@@ -93,7 +93,8 @@ export default function RoomDiscoveryPage() {
     return rooms.filter(room => {
       const matchesSearch = room.roomCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            room.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesBuilding = selectedBuilding === 'all' || room.buildingId?._id === selectedBuilding;
+      const buildingId = typeof room.buildingId === 'object' ? room.buildingId?._id : room.buildingId;
+      const matchesBuilding = selectedBuilding === 'all' || buildingId === selectedBuilding;
       const matchesStatus = selectedStatus === 'all' || room.status === selectedStatus;
       
       return matchesSearch && matchesBuilding && matchesStatus;
@@ -149,7 +150,7 @@ export default function RoomDiscoveryPage() {
                 >
                   <option value="all">Tất cả tòa nhà</option>
                   {buildings.map(b => (
-                    <option key={b._id} value={b._id}>{b.name}</option>
+                    <option key={b._id} value={b._id || ''}>{b.name}</option>
                   ))}
                 </select>
               </div>
@@ -190,9 +191,9 @@ export default function RoomDiscoveryPage() {
 
         {filteredRooms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredRooms.map((room) => (
+            {filteredRooms.map((room, index) => (
               <Card 
-                key={room._id} 
+                key={room._id || index} 
                 className="group relative overflow-hidden bg-white border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer"
                 onClick={() => setSelectedRoom(room)}
               >
@@ -213,14 +214,14 @@ export default function RoomDiscoveryPage() {
                   
                   {/* Favorite Button */}
                   <button 
-                    onClick={(e) => toggleFavorite(room._id, e)}
+                    onClick={(e) => room._id && toggleFavorite(room._id, e)}
                     className={`absolute top-4 right-4 z-10 p-2.5 rounded-full backdrop-blur-md transition-all ${
-                      favorites.includes(room._id) 
+                      room._id && favorites.includes(room._id) 
                         ? 'bg-rose-500 text-white scale-110 shadow-lg' 
                         : 'bg-white/80 text-slate-400 hover:text-rose-500'
                     }`}
                   >
-                    <Heart className={`h-4.5 w-4.5 ${favorites.includes(room._id) ? 'fill-current' : ''}`} />
+                    <Heart className={`h-4.5 w-4.5 ${room._id && favorites.includes(room._id) ? 'fill-current' : ''}`} />
                   </button>
                 </div>
 
@@ -233,7 +234,7 @@ export default function RoomDiscoveryPage() {
                       </h3>
                       <div className="flex items-center text-xs font-bold text-slate-400 mt-1">
                         <MapPin className="h-3.5 w-3.5 mr-1 text-primary" />
-                        {room.buildingId?.name || 'Khu vực trung tâm'}
+                        {typeof room.buildingId === 'object' ? room.buildingId?.name : 'Khu vực trung tâm'}
                       </div>
                     </div>
                   </div>
@@ -250,7 +251,7 @@ export default function RoomDiscoveryPage() {
                     </div>
                     <div className="flex flex-col items-center border-x border-slate-100">
                       <Maximize2 className="h-4 w-4 text-slate-300 mb-1" />
-                      <span className="text-[10px] font-bold text-slate-600 uppercase">{room.roomArea || 0}m²</span>
+                      <span className="text-[10px] font-bold text-slate-600 uppercase">{room.area || 0}m²</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <Zap className="h-4 w-4 text-slate-300 mb-1" />
@@ -313,10 +314,10 @@ export default function RoomDiscoveryPage() {
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-12">
                     {[
-                      { label: "Diện tích", value: selectedRoom.roomArea + " m²", icon: <Maximize2 className="h-4 w-4" /> },
+                      { label: "Diện tích", value: selectedRoom.area + " m²", icon: <Maximize2 className="h-4 w-4" /> },
                       { label: "Sức chứa", value: selectedRoom.maxTenants + " Người", icon: <Users className="h-4 w-4" /> },
                       { label: "Điện nước", value: "Giá dân", icon: <Zap className="h-4 w-4" /> },
-                      { label: "Tòa nhà", value: selectedRoom.buildingId?.name || 'Trung tâm', icon: <Building2 className="h-4 w-4" /> },
+                      { label: "Tòa nhà", value: (typeof selectedRoom.buildingId === 'object' ? selectedRoom.buildingId?.name : null) || 'Trung tâm', icon: <Building2 className="h-4 w-4" /> },
                     ].map((item, i) => (
                       <div key={i} className="space-y-2">
                         <div className="text-slate-400 p-2 bg-slate-50 rounded-lg w-fit">{item.icon}</div>

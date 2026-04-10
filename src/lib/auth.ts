@@ -11,10 +11,13 @@ export const authOptions: NextAuthOptions = {
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
         matKhau: { label: 'Mật khẩu', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.matKhau) {
+        const passwordField = credentials?.password || credentials?.matKhau;
+        
+        if (!credentials?.email || !passwordField) {
           return null;
         }
 
@@ -32,7 +35,7 @@ export const authOptions: NextAuthOptions = {
 
           // Support both legacy and new field names for password check
           const passwordHash = user.password || (user as any).matKhau;
-          const isPasswordValid = await compare(credentials.matKhau, passwordHash);
+          const isPasswordValid = await compare(passwordField, passwordHash);
 
           if (!isPasswordValid) {
             return null;

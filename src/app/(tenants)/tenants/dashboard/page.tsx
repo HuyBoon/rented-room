@@ -20,9 +20,14 @@ import {
   Clock,
   CheckCircle2,
   Phone,
-  MessageSquare
+  MessageSquare,
+  Plus,
+  Shield,
+  Users,
+  ChevronRight
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 export default function TenantDashboardPage() {
   const [khachThue, setKhachThue] = useState<any>(null);

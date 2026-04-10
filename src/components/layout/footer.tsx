@@ -75,7 +75,7 @@ export function Footer() {
 
         <div className="mt-20 pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-slate-400 text-sm font-medium italic">
-            © 2024 RentedRoom Platform. All rights reserved.
+            © 2026 RentedRoom Platform. All rights reserved.
           </p>
           <div className="flex items-center space-x-6 text-sm font-bold text-slate-400">
             <span className="flex items-center gap-2">

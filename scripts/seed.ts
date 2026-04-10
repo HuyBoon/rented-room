@@ -77,10 +77,14 @@ async function seed() {
     const users = [];
     for (let i = 1; i <= 10; i++) {
         const role = i === 1 ? 'admin' : (i <= 4 ? 'landlord' : 'staff');
+        let email = `user${i}@rentedroom.vn`;
+        if (i === 1) email = 'admin@rentedroom.vn';
+        if (i === 2) email = 'landlord@rentedroom.vn';
+
         const user = await User.create({
             name: pick(VN_NAMES),
-            email: `user${i}@rentedroom.vn`,
-            password: 'password123',
+            email: email,
+            password: '123456',
             phoneNumber: `09${Math.floor(10000000 + Math.random() * 90000000)}`,
             role: role,
             status: 'active'
@@ -141,14 +145,14 @@ async function seed() {
         const idCard = Array.from({length: 12}, () => Math.floor(Math.random() * 10)).join('');
         const tenant = await Tenant.create({
             fullName: VN_NAMES[i + 9 % VN_NAMES.length],
-            phoneNumber: `08${Math.floor(10000000 + Math.random() * 90000000)}`,
+            phoneNumber: `090000000${i}`,
             email: `tenant${i}@gmail.com`,
             idCardNumber: idCard,
             dateOfBirth: new Date(1990 + Math.floor(Math.random() * 15), 1, 1),
             gender: Math.random() > 0.5 ? 'male' : 'female',
             hometown: pick(DISTRICTS),
             occupation: pick(OCCUPATIONS),
-            password: 'password123',
+            password: '123456',
             status: 'renting'
         });
         tenants.push(tenant);
