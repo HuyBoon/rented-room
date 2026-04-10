@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -13,6 +13,14 @@ import { toast } from 'sonner';
 
 export default function TenantLoginPage() {
   const router = useRouter();
+  
+  useEffect(() => {
+    const token = localStorage.getItem('khachThueToken');
+    if (token) {
+      router.push('/tenants/dashboard');
+    }
+  }, [router]);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
