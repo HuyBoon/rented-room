@@ -67,8 +67,6 @@ function DashboardLayoutContent({ children }: DashboardLayoutProps) {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <SessionProvider>
-      <DashboardLayoutContent>{children}</DashboardLayoutContent>
-    </SessionProvider>
+    <DashboardLayoutContent>{children}</DashboardLayoutContent>
   );
 }

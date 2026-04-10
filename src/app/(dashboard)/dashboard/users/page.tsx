@@ -118,7 +118,8 @@ export default function AccountManagementPage() {
       if (!forceRefresh) {
         const cachedData = cache.getCache();
         if (cachedData) {
-          setUsers(cachedData.users || []);
+          const usersList = Array.isArray(cachedData.users) ? cachedData.users : [];
+          setUsers(usersList);
           setLoading(false);
           return;
         }
@@ -127,8 +128,9 @@ export default function AccountManagementPage() {
       const response = await fetch('/api/admin/users');
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
-        cache.setCache({ users: data });
+        const usersList = data.data || [];
+        setUsers(usersList);
+        cache.setCache({ users: usersList });
       } else {
         toast.error('Không thể tải danh sách người dùng');
       }
@@ -269,7 +271,7 @@ export default function AccountManagementPage() {
   const getUserAvatar = (user: User) => user.avatar || user.anhDaiDien || '';
   const getUserIsActive = (user: User) => user.isActive !== undefined ? user.isActive : (user.trangThai === 'hoatDong');
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = (Array.isArray(users) ? users : []).filter(user =>
     (user.name || user.ten || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (user.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
