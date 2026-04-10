@@ -1,4 +1,4 @@
-name: CI
+name: CI - Standard Quality Control
 
 on:
   push:
@@ -30,8 +30,11 @@ jobs:
       - name: Run Type Check
         run: npx tsc --noEmit
 
-      - name: Build
+      - name: Build Verification
         run: npm run build
         env:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET || 'dummy-secret-for-build' }}
           MONGODB_URI: ${{ secrets.MONGODB_URI || 'mongodb://localhost:27017/dummy' }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
+
+  # Future: Add automated release job based on semantic commits
